@@ -13,14 +13,40 @@
 |
 */
 
+/*
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+*/ //uncommented from jwt tutorial
+
+
+$router->get('/', function () use ($router) {
+    echo "<center> Welcome </center>";
+});
+
+$router->get('/version', function () use ($router) {
+    return $router->app->version();
+});
+
+Route::group([
+
+    'prefix' => 'api'
+
+], function ($router) {
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('user-profile', 'AuthController@me');
+
+});
+// from the jwt token tutorial
 
 $router->post('/password/reset-request', 'RequestPasswordController@sendResetLinkEmail');
 $router->post('/password/reset', [ 'as' => 'password.reset', 'uses' => 'ResetPasswordController@reset' ]);
 
-$router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
+
+/*
+$router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('authors',  ['uses' => 'AuthorController@showAllAuthors']);
   
     $router->get('authors/{id}', ['uses' => 'AuthorController@showOneAuthor']);
@@ -31,3 +57,21 @@ $router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($ro
   
     $router->put('authors/{id}', ['uses' => 'AuthorController@update']);
   });
+  */   // from the author tutorial 1st one 
+
+  // for email verification
+
+
+  $router->group(['middleware' => ['auth', 'verified']], function () use ($router) {
+    $router->post('/logout', 'AuthController@logout');
+    $router->get('/user', 'AuthController@user');
+    $router->post('/email/request-verification', ['as' => 'email.request.verification', 'uses' => 'AuthController@emailRequestVerification']);
+    $router->post('/refresh', 'AuthController@refresh');
+    $router->post('/deactivate', 'AuthController@deactivate');
+  });
+  $router->post('/register', 'AuthController@register');
+  $router->post('/login', 'AuthController@login');
+  $router->post('/reactivate', 'AuthController@reactivate');
+  $router->post('/password/reset-request', 'RequestPasswordController@sendResetLinkEmail');
+  $router->post('/password/reset', [ 'as' => 'password.reset', 'uses' => 'ResetPasswordController@reset' ]);
+  $router->post('/email/verify', ['as' => 'email.verify', 'uses' => 'AuthController@emailVerify']);

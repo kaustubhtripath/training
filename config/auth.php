@@ -14,8 +14,15 @@ return [
     |
     */
 
-    'defaults' => [
+    /*'defaults' => [
         'guard' => env('AUTH_GUARD', 'api'),
+    ],
+    */
+
+
+    'defaults' => [
+        'guard' => 'api',
+        'passwords' => 'users',
     ],
 
     /*
@@ -35,9 +42,17 @@ return [
     |
     */
 
-    'guards' => [
+    /*'guards' => [
         'api' => ['driver' => 'api'
     ],
+    ],
+    */
+
+    'guards' => [
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ],
     ],
 
     /*
@@ -56,14 +71,27 @@ return [
     | Supported: "database", "eloquent"
     |
     */
-
+    /*
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Author::class,
         ],
     ],
+    */
 
+
+        
+    
+        
+    
+    'providers' => [
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\User::class
+        ]
+        ],
+    
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords
