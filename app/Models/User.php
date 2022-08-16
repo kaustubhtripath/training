@@ -13,14 +13,17 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Traits\MustVerifyEmail;
 
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+
 
  //  use Tymon\JWTAuth\Contracts\JWTSubject;   for jwt 
  
 
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract,JWTSubject
+class User extends Model implements AuthenticatableContract, AuthorizableContract,JWTSubject,CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, HasFactory;
+    use Authenticatable, Authorizable, HasFactory,Notifiable,MustVerifyEmail,CanResetPassword;
 
     /**
      * The attributes that are mass assignable.
@@ -36,7 +39,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+         'remember_token',
     ];
 /**
      * The attributes that should be cast to native types.

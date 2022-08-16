@@ -29,6 +29,7 @@ $app = new Laravel\Lumen\Application(
 $app->configure('mail');
 $app->configure('services');
 $app->configure('database'); 
+$app->configure('jwt');
 
 
 /*
@@ -64,6 +65,7 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('mail');
 
 /*
 |--------------------------------------------------------------------------
@@ -96,7 +98,7 @@ $app->configure('app');
 */
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 
-$app->configure('mail');
+
 
 $app->alias('mail.manager', Illuminate\Mail\MailManager::class);
 $app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
@@ -122,6 +124,9 @@ $app->routeMiddleware([
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Illuminate\Auth\Passwords\PasswordResetServiceProvider::class);
 $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
+$app->withFacades(true, [
+    'Illuminate\Support\Facades\Notification' => 'Notification',
+    ]);
 
 /*
 |--------------------------------------------------------------------------

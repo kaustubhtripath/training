@@ -4,6 +4,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Lang;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Bus\Queueable;
 class VerifyEmail extends Notification
 {
     use Queueable;

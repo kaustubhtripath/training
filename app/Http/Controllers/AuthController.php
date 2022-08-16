@@ -3,11 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\VerifyEmail;
+//use Tymon\JWTAuth\Facades\JWTAuth;
+
+
+
 use Illuminate\Support\Facades\Auth;
 use  App\Models\User;
 
 class AuthController extends Controller
-{
+{  
+    public function create(Request $request)
+    {
+        $data=$request->all();
+        $opts=["cost"=>15,"salt"=>'randomsaltherezdfghjsadf'];
+        $data['password'] = password_hash($data['password'],PASSWORD_BCRYPT,$opts);
+        $user = User::create($data);
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'location' => 'required|alpha'
+        ]);
+
+        
+
+
+        return response()->json($user, 201);
+    }
 
 
 
@@ -18,6 +41,15 @@ class AuthController extends Controller
   * @param  Request  $request
   * @return Response
   */
+  
+
+
+
+
+
+
+
+ 
   public function emailRequestVerification(Request $request)
   {
     if ( $request->user()->hasVerifiedEmail() ) {
@@ -28,6 +60,7 @@ class AuthController extends Controller
     
     return response()->json('Email request verification sent to '. Auth::user()->email);
   }
+  
 /**
   * Verify an email using email and token from email.
   *
@@ -57,7 +90,7 @@ return response()->json('Email address '. $request->user()->email.' successfully
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'refresh', 'logout']]);
+        $this->middleware('auth:api', ['except' => ['login', 'refresh', 'logout','showAllUsers','create']]);
     }
     /**
      * Get a JWT via given credentials.
@@ -75,11 +108,29 @@ return response()->json('Email address '. $request->user()->email.' successfully
 
         $credentials = $request->only(['email','password']);
 
-        if (! $token = Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+        if (! $token = auth()->attempt($credentials)) {
+            return response()->json(['message' => 'Unauthorized, not authorised'], 401);
         }
 
         return $this->respondWithToken($token);
+        
+    //    $email = $request->input('email');
+    //$user = User::where('email', '=', $email)->first();
+    
+    /*
+    try { 
+        // verify the credentials and create a token for the user
+     
+        if (! $token = JWTAuth::fromUser($user)) { 
+            return response()->json(['error' => 'invalid_credentials'], 401);
+        } }
+        catch (JWTException $e) { 
+            // something went wrong 
+            return response()->json(['error' => 'could_not_create_token'], 500); 
+        } 
+        // if no errors are encountered we can return a JWT 
+        return response()->json(compact('token'));
+        */
     }
 
      /**
@@ -91,6 +142,12 @@ return response()->json('Email address '. $request->user()->email.' successfully
     {
         return response()->json(auth()->user());
     }
+    public function showAllUsers()
+    {
+        return response()->json(User::all());
+    }
+    
+    
 
     /**
      * Log the user out (Invalidate the token).

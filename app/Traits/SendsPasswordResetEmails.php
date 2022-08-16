@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Foundation\Auth;
+namespace App\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -47,7 +47,8 @@ trait SendsPasswordResetEmails
      */
     protected function validateEmail(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $this->validate($request,['email' => 'required|email',]);
+        //$this->validate($request, [ 'token' => 'required|string',]);
     }
 
     /**
@@ -70,7 +71,7 @@ trait SendsPasswordResetEmails
      */
     protected function sendResetLinkResponse(Request $request, $response)
     {
-        return back()->with('status', trans($response));
+        return response()->json(['status'=>trans($response)]);
     }
 
     /**

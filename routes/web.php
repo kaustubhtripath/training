@@ -30,7 +30,10 @@ $router->get('/version', function () use ($router) {
 
 Route::group([
 
-    'prefix' => 'api'
+    //'prefix' => 'api', //uncommented by seeing the jwt tutorial without seeder
+    'prefix' => 'auth', //added this seeing the previous tutorial
+    'middleware' => 'api',
+    
 
 ], function ($router) {
     Route::post('login', 'AuthController@login');
@@ -62,6 +65,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
   // for email verification
 
 
+  $router->get('/users',  'AuthController@showAllUsers');
+  $router->post('/user', 'AuthController@create');
+
+
+
+  
   $router->group(['middleware' => ['auth', 'verified']], function () use ($router) {
     $router->post('/logout', 'AuthController@logout');
     $router->get('/user', 'AuthController@user');
@@ -69,6 +78,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('/refresh', 'AuthController@refresh');
     $router->post('/deactivate', 'AuthController@deactivate');
   });
+
+
+
+  $router->post('/password/email', 'PasswordController@postEmail');
   $router->post('/register', 'AuthController@register');
   $router->post('/login', 'AuthController@login');
   $router->post('/reactivate', 'AuthController@reactivate');
