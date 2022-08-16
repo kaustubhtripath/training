@@ -2,11 +2,8 @@
 
 namespace App;
 
-
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+
 class Author extends Model
 {
 
@@ -16,7 +13,7 @@ class Author extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'email','password'
+        'name', 'email', 'github', 'twitter', 'location', 'latest_article_published'
     ];
 
     /**
@@ -26,6 +23,7 @@ class Author extends Model
      */
     protected $hidden = [];
 }
+
 /*
 class Author extends Model implements CanResetPasswordContract
 {

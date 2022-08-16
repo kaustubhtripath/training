@@ -29,6 +29,7 @@ $app = new Laravel\Lumen\Application(
 $app->configure('mail');
 $app->configure('services');
 $app->configure('database'); 
+$app->configure('jwt');
 
 
 /*
@@ -64,6 +65,7 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('mail');
 
 /*
 |--------------------------------------------------------------------------
@@ -80,9 +82,9 @@ $app->configure('app');
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
- $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Auth0Middleware::class,
- ]);
+// $app->routeMiddleware([
+//     'auth' => App\Http\Middleware\Authenticate::class,
+// ]);
 
 /*
 |--------------------------------------------------------------------------
@@ -94,15 +96,37 @@ $app->configure('app');
 | totally optional, so you are not required to uncomment this line.
 |
 */
+$app->register(Illuminate\Mail\MailServiceProvider::class);
+
+
+
+$app->alias('mail.manager', Illuminate\Mail\MailManager::class);
+$app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
+
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
+
+
+
+
 
  $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+ $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class); //added this line from jwt tutorial
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+    'verified' => App\Http\Middleware\EnsureEmailIsVerified::class,
+]);
 
 
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Illuminate\Auth\Passwords\PasswordResetServiceProvider::class);
 $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
+$app->withFacades(true, [
+    'Illuminate\Support\Facades\Notification' => 'Notification',
+    ]);
 
 /*
 |--------------------------------------------------------------------------

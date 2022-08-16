@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Foundation\Auth;
+namespace App\Traits;
 
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 trait ResetsPasswords
 {
-    use RedirectsUsers;
+   // use RedirectsUsers;
 
     /**
      * Display the password reset view for the given token.
@@ -37,7 +37,8 @@ trait ResetsPasswords
      */
     public function reset(Request $request)
     {
-        $request->validate($this->rules(), $this->validationErrorMessages());
+        $this->validate($request ,$this->rules(), $this->validationErrorMessages(),);
+        
 
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
