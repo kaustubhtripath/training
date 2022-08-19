@@ -50,6 +50,9 @@ $router->post('/password/reset', [ 'as' => 'password.reset', 'uses' => 'ResetPas
 
 /*
 $router->group(['prefix' => 'api'], function () use ($router) {
+    
+});
+    /*
     $router->get('authors',  ['uses' => 'AuthorController@showAllAuthors']);
   
     $router->get('authors/{id}', ['uses' => 'AuthorController@showOneAuthor']);
@@ -65,7 +68,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
   // for email verification
 
 
-  $router->get('/users',  'AuthController@showAllUsers');
+  
+  //Route::get('products', ['middleware' => 'auth.role:admin,user', 'uses' => 'ProductController@index', 'as' => 'products']);
+
+ 
+  $router->get('/users',['middleware'=>'auth.role:admin,user', 'uses' =>'AuthController@showAllUsers'] );
   $router->post('/user', 'AuthController@create');
 
 

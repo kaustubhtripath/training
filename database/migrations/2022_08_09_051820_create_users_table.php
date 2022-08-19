@@ -21,7 +21,10 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            //$table->roles(); add roles 
+            $table->string('role')->default('normal'); 
+            //$table->created_by();
+            //$table->deleted_by();
+
         });
     }
 
@@ -35,3 +38,4 @@ class CreateUsersTable extends Migration
         Schema::dropIfExists('users');
     }
 }
+

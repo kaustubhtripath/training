@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\DB;
 use App\Notifications\VerifyEmail;
 //use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -23,7 +24,7 @@ class AuthController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'location' => 'required|alpha'
+            //'location' => 'required|alpha'
         ]);
 
         
@@ -142,9 +143,29 @@ return response()->json('Email address '. $request->user()->email.' successfully
     {
         return response()->json(auth()->user());
     }
-    public function showAllUsers()
+    public function showAllUsers(Request $request)
     {
-        return response()->json(User::all());
+        $user = DB::table('users');
+        //filtering
+        if(strtolower($request->role) === 'admin'){
+            $user = DB::table('users')->where('role', '=', 'admin');
+        } elseif(strtolower($request->role) === 'normal'){
+            $user = DB::table('users')->where('role','=','normal');
+        }
+        if(strtolower($request->deleted_by) === '1'){
+            $user = DB::table('users')->where('deleted_by','<>', 'active');
+        }
+        //sorting
+        if(strtolower($request->sort) === 'name'){
+            $user = DB::table('users')->orderBy('name', 'desc');
+        } elseif(strtolower($request->sort) === 'email'){
+            $user = DB::table('users')->orderBy('email', 'asc');
+        } elseif(strtolower($request->sort) === 'created_at'){
+            $user = DB::table('users')->orderBy('created_at', 'desc');
+        }
+        $user = $user->get();
+       // return view('user.index', ['users' => $user]);
+        return response()->json($user);
     }
     
     
