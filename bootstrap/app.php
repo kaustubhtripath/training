@@ -100,6 +100,7 @@ $app->register(Illuminate\Mail\MailServiceProvider::class);
 
 
 
+
 $app->alias('mail.manager', Illuminate\Mail\MailManager::class);
 $app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
 
@@ -113,11 +114,13 @@ $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 
  $app->register(App\Providers\AppServiceProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+// $app->register(App\Providers\EventServiceProvider::class);//
+//$app->register(Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class); //added this line from jwt tutorial
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'verified' => App\Http\Middleware\EnsureEmailIsVerified::class,
+    'auth.role' => App\Http\Middleware\RoleAuthorization::class,
 ]);
 
 
@@ -139,6 +142,8 @@ $app->withFacades(true, [
 |
 */
 
+//$app->alias('JWTAuth', Tymon\JWTAuth\Facades\JWTAuth::class);
+//$app->alias('JWTFactory' , Tymon\JWTAuth\Facades\JWTFactory::class);
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
