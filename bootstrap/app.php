@@ -86,6 +86,12 @@ $app->configure('mail');
 //     'auth' => App\Http\Middleware\Authenticate::class,
 // ]);
 
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+    'verified' => App\Http\Middleware\EnsureEmailIsVerified::class,
+    'auth.role' => App\Http\Middleware\RoleAuthorization::class,
+]);
+
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -117,11 +123,7 @@ $app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
 // $app->register(App\Providers\EventServiceProvider::class);//
 //$app->register(Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class); //added this line from jwt tutorial
-$app->routeMiddleware([
-    'auth' => App\Http\Middleware\Authenticate::class,
-    'verified' => App\Http\Middleware\EnsureEmailIsVerified::class,
-    'auth.role' => App\Http\Middleware\RoleAuthorization::class,
-]);
+
 
 
 $app->register(Illuminate\Mail\MailServiceProvider::class);

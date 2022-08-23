@@ -39,7 +39,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-         'remember_token',
+         'remember_token','password',
     ];
 /**
      * The attributes that should be cast to native types.

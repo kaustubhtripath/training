@@ -83,9 +83,8 @@ trait SendsPasswordResetEmails
      */
     protected function sendResetLinkFailedResponse(Request $request, $response)
     {
-        return back()
-                ->withInput($request->only('email'))
-                ->withErrors(['email' => trans($response)]);
+        return response()->json(['status'=>trans($response)]);
+        //return back()->withInput($request->only('email'))->withErrors(['email' => trans($response)]);
     }
 
     /**
@@ -95,6 +94,6 @@ trait SendsPasswordResetEmails
      */
     public function broker()
     {
-        return Password::broker();
+        return Password::broker(); 
     }
 }
